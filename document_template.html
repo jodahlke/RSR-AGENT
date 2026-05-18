@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <!-- In production, n8n will replace this placeholder with the actual inline CSS from colors_and_type.css 
+       so CloudConvert doesn't need external access to the CSS file. -->
+  <style>
+    {{CSS_CONTENT}}
+
+    /* Print-specific overrides and A4 sizing for CloudConvert */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--void, #0A0A0A);
+      color: var(--fg-1, #E6E6E6);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 12mm 18mm 26mm 18mm;
+      box-sizing: border-box;
+      position: relative;
+      background-color: var(--void);
+    }
+    
+    .page.paper {
+      background-color: var(--paper, #FAFAFA);
+      color: var(--void, #0A0A0A);
+    }
+
+    .header-logo {
+      width: 120px;
+      margin-bottom: 32px;
+    }
+
+    .header-logo.light {
+      filter: invert(1);
+    }
+
+    .document-content {
+      /* Typography mappings */
+      font-family: var(--font-body, 'Inter', sans-serif);
+    }
+
+    .document-content h1 {
+      font-family: var(--font-display, 'Inter Tight', sans-serif);
+      font-weight: 900;
+      font-size: 32pt;
+      line-height: 1;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-tight);
+    }
+
+    .document-content h2 {
+      font-family: var(--font-display, 'Inter Tight', sans-serif);
+      font-weight: 700;
+      font-size: 20pt;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      color: var(--rec, #FF0000);
+    }
+
+    .document-content h3 {
+      font-weight: 600;
+      font-size: 14pt;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    .document-content p {
+      font-size: 11pt;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      color: var(--fg-2);
+    }
+    
+    .page.paper .document-content p {
+      color: var(--gray-600);
+    }
+
+    .document-content ul, .document-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+    
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 5mm 18mm;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 8pt;
+      color: var(--fg-3);
+      border-top: 1px solid var(--border);
+    }
+
+    .page.paper .footer {
+      border-top: 1px solid var(--gray-200);
+      color: var(--gray-400);
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Dark cover page / Hero -->
+  <div class="page">
+    <!-- SVG Logo inline to avoid asset loading issues in CloudConvert -->
+    <svg class="header-logo" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {{LOGO_SVG_CONTENT}}
+    </svg>
+    <div class="document-content">
+      {{HERO_CONTENT}}
+    </div>
+    <div class="footer">
+      rec.sleep.repeat. — agency brain
+    </div>
+  </div>
+
+  <!-- Body pages (paper-white as per design system guidelines for dense text) -->
+  <div class="page paper">
+    <div class="document-content">
+      {{BODY_CONTENT}}
+    </div>
+    <div class="footer">
+      rec.sleep.repeat. — page 2
+    </div>
+  </div>
+</body>
+</html>

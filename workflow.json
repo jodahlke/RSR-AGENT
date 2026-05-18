@@ -1,0 +1,262 @@
+{
+  "name": "rec.sleep.repeat. Agency Brain",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "agency-brain-webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are the AI brain for the agency 'rec.sleep.repeat.'. Your job is to draft content (like Content Strategies, Video Concepts, etc.) based on the user's input. \n\nCRITICAL BRAND RULES:\n- Cinematic, dark, paper-white, REC-red aesthetics.\n- Tone: Earnest plain voice for service copy, short-fragment poetic voice for manifestos.\n- No emojis. Never use emojis.\n- Always output your generated content as raw, clean HTML (using <h1>, <h2>, <p>, <ul>, etc.) so it can be directly injected into our PDF template. Do not wrap it in markdown code blocks."
+        }
+      },
+      "id": "ai-agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-pro"
+      },
+      "id": "gemini-model",
+      "name": "Google Gemini",
+      "type": "@n8n/n8n-nodes-langchain.lmGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        450,
+        500
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "memory",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1,
+      "position": [
+        600,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "document_template.html",
+        "options": {}
+      },
+      "id": "read-template",
+      "name": "Read HTML Template",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "colors_and_type.css",
+        "options": {}
+      },
+      "id": "read-css",
+      "name": "Read CSS",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "assets/logo-wordmark-light.svg",
+        "options": {}
+      },
+      "id": "read-logo",
+      "name": "Read Logo",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const template = $items(\"Read HTML Template\")[0].json.data;\nconst css = $items(\"Read CSS\")[0].json.data;\nconst logo = $items(\"Read Logo\")[0].json.data;\nconst content = $items(\"AI Agent\")[0].json.output;\n\n// Replace placeholders\nlet finalHtml = template.replace('{{CSS_CONTENT}}', css);\nfinalHtml = finalHtml.replace('{{LOGO_SVG_CONTENT}}', logo);\nfinalHtml = finalHtml.replace('{{BODY_CONTENT}}', content);\nfinalHtml = finalHtml.replace('{{HERO_CONTENT}}', '<h1>Document</h1>');\n\nreturn { html: finalHtml, chatId: $items(\"Telegram Trigger\")[0].json.message.chat.id };"
+      },
+      "id": "assemble-html",
+      "name": "Assemble HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "convert",
+        "inputFormat": "html",
+        "outputFormat": "pdf",
+        "options": {
+          "marginTop": 0,
+          "marginRight": 0,
+          "marginBottom": 0,
+          "marginLeft": 0,
+          "pageWidth": 210,
+          "pageHeight": 297,
+          "printBackground": true
+        }
+      },
+      "id": "cloudconvert",
+      "name": "CloudConvert",
+      "type": "n8n-nodes-base.cloudconvert",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "operation": "sendDocument",
+        "file": "={{ $binary.data }}",
+        "additionalFields": {
+          "caption": "Here is your generated document from the rec.sleep.repeat. Agency Brain!"
+        }
+      },
+      "id": "telegram-send",
+      "name": "Send PDF to Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Read HTML Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read HTML Template": {
+      "main": [
+        [
+          {
+            "node": "Read CSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read CSS": {
+      "main": [
+        [
+          {
+            "node": "Read Logo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Logo": {
+      "main": [
+        [
+          {
+            "node": "Assemble HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assemble HTML": {
+      "main": [
+        [
+          {
+            "node": "CloudConvert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CloudConvert": {
+      "main": [
+        [
+          {
+            "node": "Send PDF to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}
