@@ -38,12 +38,36 @@
     }
 
     .header-logo {
-      width: 120px;
+      width: 240px;
       margin-bottom: 32px;
     }
 
     .header-logo.light {
       filter: invert(1);
+    }
+
+    /* Inject a complete <svg> into the .header-logo container.
+       Scale to container width, preserve aspect ratio. */
+    .header-logo svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* The wordmark SVG references these classes via <text class="wm wm-fg">
+       and <tspan class="wm-dot">. They are NOT defined in colors_and_type.css
+       (only in preview/components-nav.html). Define them here so the SVG renders. */
+    .header-logo svg .wm {
+      font-family: var(--font-display, 'Inter Tight', sans-serif);
+      font-weight: 800;
+      font-size: 80px;
+      letter-spacing: -0.05em;
+    }
+    .header-logo svg .wm-fg {
+      fill: var(--paper, #F5F1EA);
+    }
+    .header-logo svg .wm-dot {
+      fill: var(--rec, #E10600);
     }
 
     .document-content {
@@ -117,10 +141,11 @@
 <body>
   <!-- Dark cover page / Hero -->
   <div class="page">
-    <!-- SVG Logo inline to avoid asset loading issues in CloudConvert -->
-    <svg class="header-logo" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- {{LOGO_SVG_CONTENT}} is a complete <svg>...</svg> from assets/logo-wordmark-light.svg.
+         Wrap in a div, not another svg, to avoid invalid nested-svg structure. -->
+    <div class="header-logo">
       {{LOGO_SVG_CONTENT}}
-    </svg>
+    </div>
     <div class="document-content">
       {{HERO_CONTENT}}
     </div>
