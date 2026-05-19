@@ -10,62 +10,62 @@
 
 /* Inter — primary body sans. Doubles as the italic-editorial voice
    that wraps inside a Tight display headline. */
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 100; font-display: swap; src: url("fonts/Inter-100Thin.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 100; font-display: swap; src: url("fonts/Inter-100Thin_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 200; font-display: swap; src: url("fonts/Inter-200ExtraLight.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 200; font-display: swap; src: url("fonts/Inter-200ExtraLight_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 300; font-display: swap; src: url("fonts/Inter-300Light.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 300; font-display: swap; src: url("fonts/Inter-300Light_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/Inter-400Regular.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 400; font-display: swap; src: url("fonts/Inter-400Regular_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/Inter-500Medium.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 500; font-display: swap; src: url("fonts/Inter-500Medium_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/Inter-600SemiBold.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 600; font-display: swap; src: url("fonts/Inter-600SemiBold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/Inter-700Bold.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 700; font-display: swap; src: url("fonts/Inter-700Bold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/Inter-800ExtraBold.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 800; font-display: swap; src: url("fonts/Inter-800ExtraBold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 900; font-display: swap; src: url("fonts/Inter-900Black.ttf") format("truetype"); }
-@font-face { font-family: "Inter"; font-style: italic; font-weight: 900; font-display: swap; src: url("fonts/Inter-900Black_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-100Thin.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 100; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-100Thin_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 200; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-200ExtraLight.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 200; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-200ExtraLight_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 300; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-300Light.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 300; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-300Light_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-400Regular.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 400; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-400Regular_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-500Medium.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 500; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-500Medium_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-600SemiBold.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 600; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-600SemiBold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-700Bold.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 700; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-700Bold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 800; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-800ExtraBold.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 800; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-800ExtraBold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 900; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-900Black.ttf") format("truetype"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 900; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/Inter-900Black_Italic.ttf") format("truetype"); }
 
 /* JetBrains Mono — technical voice. 8 weights × italic, self-hosted. */
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 100; font-display: swap; src: url("fonts/JetBrainsMono-100Thin.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 100; font-display: swap; src: url("fonts/JetBrainsMono-100Thin_Italic.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 200; font-display: swap; src: url("fonts/JetBrainsMono-200ExtraLight.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 200; font-display: swap; src: url("fonts/JetBrainsMono-200ExtraLight_Italic.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 300; font-display: swap; src: url("fonts/JetBrainsMono-300Light.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 300; font-display: swap; src: url("fonts/JetBrainsMono-300Light_Italic.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/JetBrainsMono-400Regular.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 400; font-display: swap; src: url("fonts/JetBrainsMono-400Regular_Italic.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/JetBrainsMono-500Medium.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 500; font-display: swap; src: url("fonts/JetBrainsMono-500Medium_Italic.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/JetBrainsMono-600SemiBold.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 600; font-display: swap; src: url("fonts/JetBrainsMono-600SemiBold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/JetBrainsMono-700Bold.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 700; font-display: swap; src: url("fonts/JetBrainsMono-700Bold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/JetBrainsMono-800ExtraBold.ttf") format("truetype"); }
-@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 800; font-display: swap; src: url("fonts/JetBrainsMono-800ExtraBold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 100; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-100Thin.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 100; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-100Thin_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 200; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-200ExtraLight.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 200; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-200ExtraLight_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 300; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-300Light.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 300; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-300Light_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-400Regular.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 400; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-400Regular_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-500Medium.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 500; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-500Medium_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 600; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-600SemiBold.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 600; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-600SemiBold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 700; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-700Bold.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 700; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-700Bold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 800; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-800ExtraBold.ttf") format("truetype"); }
+@font-face { font-family: "JetBrains Mono"; font-style: italic; font-weight: 800; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/JetBrainsMono-800ExtraBold_Italic.ttf") format("truetype"); }
 
 /* Inter Tight — the brand sans. Full 9-weight family with matched italics. */
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 100; font-display: swap; src: url("fonts/InterTight-100Thin.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 100; font-display: swap; src: url("fonts/InterTight-100Thin_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 200; font-display: swap; src: url("fonts/InterTight-200ExtraLight.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 200; font-display: swap; src: url("fonts/InterTight-200ExtraLight_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 300; font-display: swap; src: url("fonts/InterTight-300Light.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 300; font-display: swap; src: url("fonts/InterTight-300Light_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/InterTight-400Regular.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 400; font-display: swap; src: url("fonts/InterTight-400Regular_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/InterTight-500Medium.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 500; font-display: swap; src: url("fonts/InterTight-500Medium_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/InterTight-600SemiBold.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 600; font-display: swap; src: url("fonts/InterTight-600SemiBold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/InterTight-700Bold.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 700; font-display: swap; src: url("fonts/InterTight-700Bold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/InterTight-800ExtraBold.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 800; font-display: swap; src: url("fonts/InterTight-800ExtraBold_Italic.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 900; font-display: swap; src: url("fonts/InterTight-900Black.ttf") format("truetype"); }
-@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 900; font-display: swap; src: url("fonts/InterTight-900Black_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 100; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-100Thin.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 100; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-100Thin_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 200; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-200ExtraLight.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 200; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-200ExtraLight_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 300; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-300Light.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 300; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-300Light_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 400; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-400Regular.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 400; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-400Regular_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 500; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-500Medium.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 500; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-500Medium_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 600; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-600SemiBold.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 600; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-600SemiBold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 700; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-700Bold.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 700; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-700Bold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 800; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-800ExtraBold.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 800; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-800ExtraBold_Italic.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 900; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-900Black.ttf") format("truetype"); }
+@font-face { font-family: "Inter Tight"; font-style: italic; font-weight: 900; font-display: swap; src: url("https://raw.githubusercontent.com/jodahlke/RSR-AGENT/main/fonts/InterTight-900Black_Italic.ttf") format("truetype"); }
 
 :root {
   /* ---------- COLOR ---------- */
