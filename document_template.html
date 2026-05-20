@@ -35,11 +35,11 @@
       color: var(--fg-1, #E6E6E6);
     }
 
-    /* Compact dark hero at top of page 1. ~80mm fits logo + eyebrow + title
-       + brand-footer without a giant void below. Body flows immediately after. */
+    /* Compact dark hero at top of page 1. 60mm fits logo + eyebrow + title
+       tightly without dead space. Body flows immediately after. */
     .page.hero {
-      height: 80mm;
-      min-height: 80mm;
+      height: 60mm;
+      min-height: 60mm;
     }
 
     .page.paper {
@@ -49,8 +49,8 @@
     }
 
     .header-logo {
-      width: 240px;
-      margin-bottom: 32px;
+      width: 200px;
+      margin-bottom: 20px;
     }
 
     .header-logo.light {
@@ -91,9 +91,9 @@
     .document-content h1 {
       font-family: var(--font-display, 'Inter Tight', sans-serif);
       font-weight: 900;
-      font-size: 32pt;
+      font-size: 28pt;
       line-height: 1;
-      margin-bottom: 24px;
+      margin-bottom: 0;
       text-transform: uppercase;
       letter-spacing: var(--tracking-tight);
       /* Compensate for negative letter-spacing crushing the space glyph
@@ -173,7 +173,10 @@
 </head>
 <body>
   <!-- Hero: compact dark band at top of page 1 with logo + eyebrow + title.
-       Fixed 140mm so body flows naturally below without a giant black void. -->
+       Fixed 60mm so body flows naturally below without a giant black void.
+       The brand-mark footer was removed for now — it had a PDFShift rendering
+       glitch where the text overlapped itself. Will be re-added as a clean
+       slate-meta element in a later iteration. -->
   <div class="page hero">
     <!-- LOGO_SVG_CONTENT is a complete svg from assets/logo-wordmark-light.svg.
          Wrapped in a div, not another svg, to avoid invalid nesting. -->
@@ -182,9 +185,6 @@
     </div>
     <div class="document-content">
       {{HERO_CONTENT}}
-    </div>
-    <div class="footer">
-      rec.sleep.repeat. — agency brain
     </div>
   </div>
 
