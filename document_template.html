@@ -14,10 +14,12 @@
       margin: 0;
     }
     
-    body {
+    /* Both html and body need paper bg — colors_and_type.css sets
+       `html, body { background: var(--bg) }` (= void) which would otherwise
+       reveal as a dark strip below the body's content on short docs. */
+    html, body {
       margin: 0;
       padding: 0;
-      /* Body bg = paper so multi-page bodies don't reveal void on overflow. */
       background-color: var(--paper, #F5F1EA);
       color: var(--void, #0A0A0A);
       -webkit-print-color-adjust: exact;
@@ -26,19 +28,18 @@
 
     .page {
       width: 210mm;
-      padding: 12mm 18mm 26mm 18mm;
+      padding: 12mm 18mm 24mm 18mm;
       box-sizing: border-box;
       position: relative;
       background-color: var(--void);
       color: var(--fg-1, #E6E6E6);
     }
 
-    /* Hero is a compact dark band at the top of page 1, not a full A4 cover.
-       Body flows immediately after, giving more room for content on page 1
-       and avoiding the giant black void. */
+    /* Compact dark hero at top of page 1. ~80mm fits logo + eyebrow + title
+       + brand-footer without a giant void below. Body flows immediately after. */
     .page.hero {
-      height: 140mm;
-      min-height: 140mm;
+      height: 80mm;
+      min-height: 80mm;
     }
 
     .page.paper {
@@ -70,7 +71,9 @@
     .header-logo svg .wm {
       font-family: var(--font-display, 'Inter Tight', sans-serif);
       font-weight: 800;
-      font-size: 80px;
+      /* 60px in viewBox units fits the full "rec.sleep.repeat." text
+         within the SVG's viewBox width of 640. 80px caused right-edge clipping. */
+      font-size: 60px;
       letter-spacing: -0.05em;
     }
     .header-logo svg .wm-fg {
