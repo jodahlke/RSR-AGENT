@@ -83,6 +83,9 @@
       margin-bottom: 24px;
       text-transform: uppercase;
       letter-spacing: var(--tracking-tight);
+      /* Compensate for negative letter-spacing crushing the space glyph
+         to ~0 width on UPPERCASE Inter Tight Black. */
+      word-spacing: 0.18em;
     }
 
     .document-content h2 {
@@ -92,6 +95,23 @@
       margin-top: 32px;
       margin-bottom: 16px;
       color: var(--rec, #FF0000);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-tight);
+      word-spacing: 0.18em;
+    }
+
+    /* Eyebrow above the hero H1 — mono, REC-red, wide tracking.
+       Used when the AI title contains a colon (e.g. "BRIEFING: TAGESDREH"
+       becomes <p class="eyebrow">BRIEFING</p><h1>TAGESDREH</h1>). */
+    .document-content .eyebrow {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-weight: 500;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-eyebrow, 0.22em);
+      color: var(--rec, #E10600);
+      margin: 0 0 16px;
+      display: block;
     }
 
     .document-content h3 {
