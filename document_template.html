@@ -48,13 +48,42 @@
       /* no min-height — paper page flows naturally based on content length */
     }
 
+    /* Hero top row: logo on left, slate-meta on right. Flex keeps them
+       aligned across the hero width regardless of slate-meta length. */
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
     .header-logo {
       width: 200px;
-      margin-bottom: 20px;
+      flex-shrink: 0;
     }
 
     .header-logo.light {
       filter: invert(1);
+    }
+
+    /* Slate metadata — a thin mono line in the hero with REC-dot + date + origin.
+       Echoes the film-slate / clapperboard voice from the design system. */
+    .slate-meta {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--fg-3, #888);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .slate-meta .rec-dot {
+      color: var(--rec, #E10600);
+      font-size: 12pt;
+      line-height: 1;
+      vertical-align: middle;
+      margin-right: 8px;
     }
 
     /* Inject a complete <svg> into the .header-logo container.
@@ -172,16 +201,19 @@
   </style>
 </head>
 <body>
-  <!-- Hero: compact dark band at top of page 1 with logo + eyebrow + title.
-       Fixed 60mm so body flows naturally below without a giant black void.
-       The brand-mark footer was removed for now — it had a PDFShift rendering
-       glitch where the text overlapped itself. Will be re-added as a clean
-       slate-meta element in a later iteration. -->
+  <!-- Hero: compact dark band at top of page 1.
+       Top row: logo (left) + slate-meta (right) in a flex container.
+       Below: eyebrow + h1 from the AI's first <h1>. -->
   <div class="page hero">
-    <!-- LOGO_SVG_CONTENT is a complete svg from assets/logo-wordmark-light.svg.
-         Wrapped in a div, not another svg, to avoid invalid nesting. -->
-    <div class="header-logo">
-      {{LOGO_SVG_CONTENT}}
+    <div class="hero-top">
+      <!-- LOGO_SVG_CONTENT is a complete svg from assets/logo-wordmark-light.svg.
+           Wrapped in a div, not another svg, to avoid invalid nesting. -->
+      <div class="header-logo">
+        {{LOGO_SVG_CONTENT}}
+      </div>
+      <div class="slate-meta">
+        {{SLATE_META}}
+      </div>
     </div>
     <div class="document-content">
       {{HERO_CONTENT}}
