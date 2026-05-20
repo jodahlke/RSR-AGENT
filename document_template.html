@@ -17,24 +17,34 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: var(--void, #0A0A0A);
-      color: var(--fg-1, #E6E6E6);
+      /* Body bg = paper so multi-page bodies don't reveal void on overflow. */
+      background-color: var(--paper, #F5F1EA);
+      color: var(--void, #0A0A0A);
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
 
     .page {
       width: 210mm;
-      min-height: 297mm;
       padding: 12mm 18mm 26mm 18mm;
       box-sizing: border-box;
       position: relative;
       background-color: var(--void);
+      color: var(--fg-1, #E6E6E6);
     }
-    
+
+    /* Hero is a compact dark band at the top of page 1, not a full A4 cover.
+       Body flows immediately after, giving more room for content on page 1
+       and avoiding the giant black void. */
+    .page.hero {
+      height: 140mm;
+      min-height: 140mm;
+    }
+
     .page.paper {
       background-color: var(--paper, #FAFAFA);
       color: var(--void, #0A0A0A);
+      /* no min-height — paper page flows naturally based on content length */
     }
 
     .header-logo {
@@ -159,10 +169,11 @@
   </style>
 </head>
 <body>
-  <!-- Dark cover page / Hero -->
-  <div class="page">
-    <!-- {{LOGO_SVG_CONTENT}} is a complete <svg>...</svg> from assets/logo-wordmark-light.svg.
-         Wrap in a div, not another svg, to avoid invalid nested-svg structure. -->
+  <!-- Hero: compact dark band at top of page 1 with logo + eyebrow + title.
+       Fixed 140mm so body flows naturally below without a giant black void. -->
+  <div class="page hero">
+    <!-- LOGO_SVG_CONTENT is a complete svg from assets/logo-wordmark-light.svg.
+         Wrapped in a div, not another svg, to avoid invalid nesting. -->
     <div class="header-logo">
       {{LOGO_SVG_CONTENT}}
     </div>
@@ -174,13 +185,12 @@
     </div>
   </div>
 
-  <!-- Body pages (paper-white as per design system guidelines for dense text) -->
+  <!-- Body: paper-white, flows naturally. No min-height, so it ends at the
+       natural bottom of its content. Multi-page bodies inherit paper background
+       from body{} above. -->
   <div class="page paper">
     <div class="document-content">
       {{BODY_CONTENT}}
-    </div>
-    <div class="footer">
-      rec.sleep.repeat. — page 2
     </div>
   </div>
 </body>
