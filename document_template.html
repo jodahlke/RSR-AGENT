@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
-  <!-- In production, n8n will replace this placeholder with the actual inline CSS from colors_and_type.css 
-       so CloudConvert doesn't need external access to the CSS file. -->
+  <!-- In production, n8n will replace this placeholder with the actual inline CSS from colors_and_type.css
+       so PDFShift doesn't need external access to the CSS file. -->
   <style>
     {{CSS_CONTENT}}
 
-    /* Print-specific overrides and A4 sizing for CloudConvert */
+    /* Print-specific overrides and A4 sizing for PDFShift.
+       Page 1 stays edge-to-edge (margin: 0) so the dark hero band fills
+       the top. Pages 2+ get a top breathing margin so continued body
+       content does not collide with the physical page edge. */
     @page {
       size: A4 portrait;
+      margin: 24mm 0 18mm 0;
+    }
+
+    @page :first {
       margin: 0;
     }
-    
+
     /* Both html and body need paper bg — colors_and_type.css sets
        `html, body { background: var(--bg) }` (= void) which would otherwise
        reveal as a dark strip below the body's content on short docs. */
@@ -169,7 +176,7 @@
       margin-bottom: 16px;
       color: var(--fg-2);
     }
-    
+
     .page.paper .document-content p {
       color: var(--gray-600);
     }
@@ -180,7 +187,7 @@
       font-size: 11pt;
       line-height: 1.5;
     }
-    
+
     .footer {
       position: absolute;
       bottom: 0;
@@ -222,7 +229,7 @@
 
   <!-- Body: paper-white, flows naturally. No min-height, so it ends at the
        natural bottom of its content. Multi-page bodies inherit paper background
-       from body{} above. -->
+       from body{} above. Continued pages get a top margin from @page (not :first). -->
   <div class="page paper">
     <div class="document-content">
       {{BODY_CONTENT}}
