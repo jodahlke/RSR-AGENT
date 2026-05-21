@@ -17,11 +17,13 @@
        SINE-SINE invoice without per-page HTML sectioning. */
     @page {
       size: A4 portrait;
-      /* 32mm margins on top and bottom. Each margin-box gets a 22mm void
-         bar (its background-color) PLUS a 10mm paper-color border on the
-         body-facing side. The border subtracts from the box's content
-         area, creating a visual paper-color spacer between the dark bar
-         and the body content. Symmetric top/bottom. */
+      /* 32mm margins on top and bottom. Each margin-box has a void
+         background that fills only the padding-box (22mm), plus a 10mm
+         transparent border on the body-facing side. The transparent
+         border reveals the @page paper background underneath, giving a
+         clean spacer between the dark bar and the body content WITHOUT
+         a visible seam (a paper-colored border would anti-alias against
+         the @page paper bg and leave a thin line at the boundary). */
       margin: 32mm 0 32mm 0;
       background-color: var(--paper, #F5F1EA);
       -webkit-print-color-adjust: exact;
@@ -34,7 +36,8 @@
       @top-left {
         content: "{{RUNNING_HEADER_LEFT}}";
         background-color: #0A0A0A;
-        border-bottom: 10mm solid var(--paper, #F5F1EA);
+        border-bottom: 10mm solid transparent;
+        background-clip: padding-box;
         box-sizing: border-box;
         font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
         font-weight: 900;
@@ -47,13 +50,15 @@
       @top-center {
         content: "";
         background-color: #0A0A0A;
-        border-bottom: 10mm solid var(--paper, #F5F1EA);
+        border-bottom: 10mm solid transparent;
+        background-clip: padding-box;
         box-sizing: border-box;
       }
       @top-right {
         content: "{{RUNNING_HEADER_RIGHT}}";
         background-color: #0A0A0A;
-        border-bottom: 10mm solid var(--paper, #F5F1EA);
+        border-bottom: 10mm solid transparent;
+        background-clip: padding-box;
         box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
@@ -73,7 +78,8 @@
       @bottom-left {
         content: "{{FOOTER_LEFT}}";
         background-color: #0A0A0A;
-        border-top: 10mm solid var(--paper, #F5F1EA);
+        border-top: 10mm solid transparent;
+        background-clip: padding-box;
         box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
@@ -88,13 +94,15 @@
       @bottom-center {
         content: "";
         background-color: #0A0A0A;
-        border-top: 10mm solid var(--paper, #F5F1EA);
+        border-top: 10mm solid transparent;
+        background-clip: padding-box;
         box-sizing: border-box;
       }
       @bottom-right {
         content: "{{FOOTER_RIGHT}} · SEITE " counter(page) " / " counter(pages);
         background-color: #0A0A0A;
-        border-top: 10mm solid var(--paper, #F5F1EA);
+        border-top: 10mm solid transparent;
+        background-clip: padding-box;
         box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
