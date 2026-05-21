@@ -17,63 +17,64 @@
        SINE-SINE invoice without per-page HTML sectioning. */
     @page {
       size: A4 portrait;
-      /* 32mm top + 32mm bottom margin. The bar itself is only 22mm tall
-         (painted via gradient); the remaining 10mm is paper-color, acting
-         as visual breathing room between the bar and the body content.
-         Symmetric top/bottom — same bar height on header and footer. */
+      /* 32mm margins on top and bottom. Each margin-box gets a 22mm void
+         bar (its background-color) PLUS a 10mm paper-color border on the
+         body-facing side. The border subtracts from the box's content
+         area, creating a visual paper-color spacer between the dark bar
+         and the body content. Symmetric top/bottom. */
       margin: 32mm 0 32mm 0;
-      /* Layered backgrounds: paper everywhere, with a 22mm void bar at
-         the very top and another at the very bottom. The transparent
-         portion of each gradient (22mm–32mm) reveals the underlying
-         paper background-color, creating the spacer. */
       background-color: var(--paper, #F5F1EA);
-      background-image:
-        linear-gradient(to bottom, #0A0A0A 0 22mm, transparent 22mm),
-        linear-gradient(to top,    #0A0A0A 0 22mm, transparent 22mm);
-      background-size: 100% 32mm, 100% 32mm;
-      background-position: top, bottom;
-      background-repeat: no-repeat;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
 
-      /* Running header on pages 2+. Text must sit within the 22mm void
-         bar at the TOP of the margin (margin is 32mm; bar is 0–22mm; the
-         lower 22–32mm is paper spacer). vertical-align: top + padding-top
-         centers text within the bar. Page 1 overrides @top-* to none. */
+      /* Running header on pages 2+. Each top margin-box gets bg-color
+         void + 10mm paper border-bottom. The box is 32mm tall; 22mm of
+         it is dark (the bar with the header text), the lower 10mm is
+         paper-colored (the spacer). Page 1 overrides @top-* to none. */
       @top-left {
         content: "{{RUNNING_HEADER_LEFT}}";
+        background-color: #0A0A0A;
+        border-bottom: 10mm solid var(--paper, #F5F1EA);
+        box-sizing: border-box;
         font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
         font-weight: 900;
         font-size: 10pt;
         color: #F5F1EA;
-        padding: 8mm 0 0 18mm;
-        vertical-align: top;
+        padding: 0 0 0 18mm;
+        vertical-align: middle;
         white-space: nowrap;
       }
       @top-center {
         content: "";
+        background-color: #0A0A0A;
+        border-bottom: 10mm solid var(--paper, #F5F1EA);
+        box-sizing: border-box;
       }
       @top-right {
         content: "{{RUNNING_HEADER_RIGHT}}";
+        background-color: #0A0A0A;
+        border-bottom: 10mm solid var(--paper, #F5F1EA);
+        box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
         font-size: 8pt;
         color: rgba(245, 241, 234, 0.72);
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        padding: 8mm 18mm 0 0;
-        vertical-align: top;
+        padding: 0 18mm 0 0;
+        vertical-align: middle;
         text-align: right;
         white-space: nowrap;
       }
 
-      /* Running footer on every page. Text sits within the 22mm void bar
-         at the BOTTOM of the margin (margin is 32mm; bar is at 10–32mm
-         from the margin's top, i.e. anchored to bottom). vertical-align:
-         bottom + padding-bottom centers text within the bar. white-space
-         stays normal so the URL+brand line can wrap if needed. */
+      /* Running footer on every page. Each bottom margin-box gets bg-color
+         void + 10mm paper border-TOP. The 10mm spacer sits above the dark
+         bar (between body content and the footer bar). */
       @bottom-left {
         content: "{{FOOTER_LEFT}}";
+        background-color: #0A0A0A;
+        border-top: 10mm solid var(--paper, #F5F1EA);
+        box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
         font-size: 7pt;
@@ -81,14 +82,20 @@
         color: rgba(245, 241, 234, 0.48);
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        padding: 0 4mm 8mm 18mm;
-        vertical-align: bottom;
+        padding: 0 4mm 0 18mm;
+        vertical-align: middle;
       }
       @bottom-center {
         content: "";
+        background-color: #0A0A0A;
+        border-top: 10mm solid var(--paper, #F5F1EA);
+        box-sizing: border-box;
       }
       @bottom-right {
         content: "{{FOOTER_RIGHT}} · SEITE " counter(page) " / " counter(pages);
+        background-color: #0A0A0A;
+        border-top: 10mm solid var(--paper, #F5F1EA);
+        box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
         font-size: 7pt;
@@ -96,24 +103,19 @@
         color: rgba(245, 241, 234, 0.48);
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        padding: 0 18mm 8mm 4mm;
-        vertical-align: bottom;
+        padding: 0 18mm 0 4mm;
+        vertical-align: middle;
         text-align: right;
       }
     }
 
     /* Page 1: no top margin (hero touches the page edge). Bottom 32mm
-       matches the rest — 22mm void bar + 10mm paper spacer. Top margin-
-       boxes are suppressed (page 1 has the full hero, not a running
-       header). Override the background to ONLY apply the bottom bar
-       gradient (no top gradient — that would conflict with the hero). */
+       matches the rest. Top margin-boxes are suppressed (page 1 has the
+       full hero, not a running header). The @bottom-* margin-boxes
+       inherit from @page, so the footer bar with paper spacer renders. */
     @page :first {
       margin: 0 0 32mm 0;
       background-color: var(--paper, #F5F1EA);
-      background-image: linear-gradient(to top, #0A0A0A 0 22mm, transparent 22mm);
-      background-size: 100% 32mm;
-      background-position: bottom;
-      background-repeat: no-repeat;
       @top-left   { content: none; }
       @top-center { content: none; }
       @top-right  { content: none; }
