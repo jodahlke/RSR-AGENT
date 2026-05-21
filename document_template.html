@@ -8,22 +8,94 @@
   <style>
     {{CSS_CONTENT}}
 
-    /* Print-specific overrides and A4 sizing for PDFShift.
-       Page 1 stays edge-to-edge (margin: 0) so the dark hero band fills
-       the top. Pages 2+ get a top breathing margin so continued body
-       content does not collide with the physical page edge. */
+    /* ===== PAGED MEDIA =====
+       Trick: the @page background is void (black). Body background is paper.
+       The body covers the page area; the margins remain visible as a black
+       strip top + bottom. The @page margin-boxes are then placed inside that
+       strip — running header (top, pages 2+) and running footer (every page).
+       This gives us the full-bleed black header/footer bars from the
+       SINE-SINE invoice without per-page HTML sectioning. */
     @page {
       size: A4 portrait;
       margin: 24mm 0 18mm 0;
+      background-color: #0A0A0A;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+
+      /* Running header on pages 2+. Page 1 overrides @top-* to none. */
+      @top-left {
+        content: "{{RUNNING_HEADER_LEFT}}";
+        font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 10pt;
+        color: #F5F1EA;
+        padding: 0 0 0 18mm;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      @top-center {
+        content: "";
+      }
+      @top-right {
+        content: "{{RUNNING_HEADER_RIGHT}}";
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 8pt;
+        color: rgba(245, 241, 234, 0.72);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0 18mm 0 0;
+        vertical-align: middle;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      /* Running footer on every page. white-space is NOT nowrap because the
+         long brand line wraps to two lines on purpose, mirroring the
+         SINE-SINE invoice's editorial wrap. */
+      @bottom-left {
+        content: "{{FOOTER_LEFT}}";
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 7pt;
+        line-height: 1.45;
+        color: rgba(245, 241, 234, 0.48);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0 4mm 0 18mm;
+        vertical-align: middle;
+      }
+      @bottom-center {
+        content: "";
+      }
+      @bottom-right {
+        content: "{{FOOTER_RIGHT}} · SEITE " counter(page) " / " counter(pages);
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 7pt;
+        line-height: 1.45;
+        color: rgba(245, 241, 234, 0.48);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0 18mm 0 4mm;
+        vertical-align: middle;
+        text-align: right;
+      }
     }
 
+    /* Page 1: no top margin so the dark hero band touches the page edge.
+       Bottom 18mm stays for the running footer. Top margin-boxes are
+       suppressed (page 1 has the full hero instead of a running header). */
     @page :first {
-      margin: 0;
+      margin: 0 0 18mm 0;
+      @top-left   { content: none; }
+      @top-center { content: none; }
+      @top-right  { content: none; }
     }
 
-    /* Both html and body need paper bg — colors_and_type.css sets
-       `html, body { background: var(--bg) }` (= void) which would otherwise
-       reveal as a dark strip below the body's content on short docs. */
+    /* Body covers the page-content area. Its background is paper, leaving
+       the @page void background visible only in the top/bottom margin
+       strips — i.e. the running header / footer bars. */
     html, body {
       margin: 0;
       padding: 0;
@@ -38,7 +110,7 @@
       padding: 12mm 18mm 24mm 18mm;
       box-sizing: border-box;
       position: relative;
-      background-color: var(--void);
+      background-color: var(--night, #0A0A0A);
       color: var(--fg-1, #E6E6E6);
     }
 
@@ -50,13 +122,12 @@
     }
 
     .page.paper {
-      background-color: var(--paper, #FAFAFA);
+      background-color: var(--paper, #F5F1EA);
       color: var(--void, #0A0A0A);
       /* no min-height — paper page flows naturally based on content length */
     }
 
-    /* Hero top row: logo on left, slate-meta on right. Flex keeps them
-       aligned across the hero width regardless of slate-meta length. */
+    /* Hero top row: logo on left, slate-meta on right. */
     .hero-top {
       display: flex;
       justify-content: space-between;
@@ -69,12 +140,7 @@
       flex-shrink: 0;
     }
 
-    .header-logo.light {
-      filter: invert(1);
-    }
-
-    /* Slate metadata — a thin mono line in the hero with REC-dot + date + origin.
-       Echoes the film-slate / clapperboard voice from the design system. */
+    /* Slate metadata — a thin mono line in the hero with REC-dot + date + origin. */
     .slate-meta {
       font-family: var(--font-mono, 'JetBrains Mono', monospace);
       font-size: 8pt;
@@ -93,8 +159,7 @@
       margin-right: 8px;
     }
 
-    /* Inject a complete <svg> into the .header-logo container.
-       Scale to container width, preserve aspect ratio. */
+    /* Inject a complete <svg> into the .header-logo container. */
     .header-logo svg {
       width: 100%;
       height: auto;
@@ -102,13 +167,10 @@
     }
 
     /* The wordmark SVG references these classes via <text class="wm wm-fg">
-       and <tspan class="wm-dot">. They are NOT defined in colors_and_type.css
-       (only in preview/components-nav.html). Define them here so the SVG renders. */
+       and <tspan class="wm-dot">. Defined here so the SVG renders. */
     .header-logo svg .wm {
       font-family: var(--font-display, 'Inter Tight', sans-serif);
       font-weight: 800;
-      /* 60px in viewBox units fits the full "rec.sleep.repeat." text
-         within the SVG's viewBox width of 640. 80px caused right-edge clipping. */
       font-size: 60px;
       letter-spacing: -0.05em;
     }
@@ -119,9 +181,15 @@
       fill: var(--rec, #E10600);
     }
 
+    /* ===== TYPOGRAPHY =====
+       Universal brand layer: every H1 and every H2 gets a REC-red ending
+       dot via ::after. Section counter (01 —, 02 — ...) prefixes each H2
+       via ::before. The AI does not need to know about either — they are
+       pure CSS additions to plain <h1> / <h2> tags. */
+
     .document-content {
-      /* Typography mappings */
       font-family: var(--font-body, 'Inter', sans-serif);
+      counter-reset: section;
     }
 
     .document-content h1 {
@@ -132,26 +200,70 @@
       margin-bottom: 0;
       text-transform: uppercase;
       letter-spacing: var(--tracking-tight);
-      /* Compensate for negative letter-spacing crushing the space glyph
-         to ~0 width on UPPERCASE Inter Tight Black. */
       word-spacing: 0.18em;
+    }
+
+    /* REC-red period anchoring the title. Mirrors the wordmark `.` */
+    .document-content h1::after {
+      content: ".";
+      color: var(--rec, #E10600);
     }
 
     .document-content h2 {
       font-family: var(--font-display, 'Inter Tight', sans-serif);
       font-weight: 700;
       font-size: 20pt;
-      margin-top: 32px;
-      margin-bottom: 16px;
-      color: var(--rec, #FF0000);
+      margin-top: 36px;
+      margin-bottom: 14px;
+      color: var(--void, #0A0A0A);
       text-transform: uppercase;
       letter-spacing: var(--tracking-tight);
       word-spacing: 0.18em;
+      counter-increment: section;
+    }
+
+    /* Section counter eyebrow above each H2 — '01 — VISION'.
+       Uses ::before on a wrapping ::marker-like pseudo-block. */
+    .document-content h2::before {
+      content: counter(section, decimal-leading-zero) " — ";
+      display: block;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-weight: 500;
+      font-size: 9pt;
+      color: var(--rec, #E10600);
+      letter-spacing: 0.22em;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    /* REC-red period at the end of every H2, same signature as H1. */
+    .document-content h2::after {
+      content: ".";
+      color: var(--rec, #E10600);
+    }
+
+    /* When the AI wraps part of an H2 in <em>, that part renders italic
+       Regular (Inter Regular) for the SINE-SINE mixed-weight feel:
+       e.g. "BANK<em>verbindung</em>" → BANK + italic verbindung. */
+    .document-content h2 em {
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-style: italic;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--void);
+    }
+
+    /* When the AI uses <strong> inside an H2 — currently default-styled,
+       but reserved so we can do "BANK<strong>verbindung</strong>" → all-caps
+       + lowercase mix in a future iteration. */
+    .document-content h2 strong {
+      font-weight: 900;
     }
 
     /* Eyebrow above the hero H1 — mono, REC-red, wide tracking.
-       Used when the AI title contains a colon (e.g. "BRIEFING: TAGESDREH"
-       becomes <p class="eyebrow">BRIEFING</p><h1>TAGESDREH</h1>). */
+       Triggered when the AI title contains a colon: "BRIEFING: TAGESDREH"
+       → eyebrow "BRIEFING", h1 "TAGESDREH". */
     .document-content .eyebrow {
       font-family: var(--font-mono, 'JetBrains Mono', monospace);
       font-weight: 500;
@@ -159,7 +271,7 @@
       text-transform: uppercase;
       letter-spacing: var(--tracking-eyebrow, 0.22em);
       color: var(--rec, #E10600);
-      margin: 0 0 16px;
+      margin: 0 0 14px;
       display: block;
     }
 
@@ -167,54 +279,97 @@
       font-weight: 600;
       font-size: 14pt;
       margin-top: 24px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      color: var(--void);
     }
 
     .document-content p {
       font-size: 11pt;
-      line-height: 1.5;
-      margin-bottom: 16px;
+      line-height: 1.55;
+      margin-bottom: 14px;
       color: var(--fg-2);
     }
 
     .page.paper .document-content p {
-      color: var(--gray-600);
+      color: var(--gray-600, #444);
+    }
+
+    /* Inline bold + italic in body copy. */
+    .page.paper .document-content strong {
+      color: var(--void);
+      font-weight: 700;
+    }
+
+    .page.paper .document-content em {
+      color: var(--void);
+      font-style: italic;
     }
 
     .document-content ul, .document-content ol {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       padding-left: 24px;
       font-size: 11pt;
-      line-height: 1.5;
+      line-height: 1.55;
+      color: var(--gray-600, #444);
     }
 
-    .footer {
+    .document-content li {
+      margin-bottom: 6px;
+    }
+
+    /* Custom bullet — REC-red disc, mirroring the SINE-SINE list style. */
+    .document-content ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .document-content ul li {
+      position: relative;
+      padding-left: 18px;
+    }
+    .document-content ul li::before {
+      content: "●";
+      color: var(--rec, #E10600);
       position: absolute;
-      bottom: 0;
       left: 0;
-      width: 100%;
-      padding: 5mm 18mm;
-      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      top: 0;
       font-size: 8pt;
-      color: var(--fg-3);
-      border-top: 1px solid var(--border);
+      line-height: 1.9;
     }
 
-    .page.paper .footer {
-      border-top: 1px solid var(--gray-200);
-      color: var(--gray-400);
+    /* ===== PAGE-BREAK RULES =====
+       Prevent orphan H2 (heading at bottom of page with paragraph thrown
+       to next page). Three-line orphan/widow control on paragraphs. */
+    .document-content h1,
+    .document-content h2,
+    .document-content h3 {
+      break-after: avoid-page;
+      page-break-after: avoid;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .document-content h2 + p,
+    .document-content h3 + p {
+      break-before: avoid-page;
+      page-break-before: avoid;
+    }
+    .document-content p {
+      orphans: 3;
+      widows: 3;
+    }
+    .document-content ul,
+    .document-content ol {
+      break-inside: avoid-page;
+      page-break-inside: avoid;
     }
 
   </style>
 </head>
 <body>
   <!-- Hero: compact dark band at top of page 1.
-       Top row: logo (left) + slate-meta (right) in a flex container.
+       Top row: logo (left) + slate-meta (right).
        Below: eyebrow + h1 from the AI's first <h1>. -->
   <div class="page hero">
     <div class="hero-top">
-      <!-- LOGO_SVG_CONTENT is a complete svg from assets/logo-wordmark-light.svg.
-           Wrapped in a div, not another svg, to avoid invalid nesting. -->
       <div class="header-logo">
         {{LOGO_SVG_CONTENT}}
       </div>
@@ -227,9 +382,9 @@
     </div>
   </div>
 
-  <!-- Body: paper-white, flows naturally. No min-height, so it ends at the
-       natural bottom of its content. Multi-page bodies inherit paper background
-       from body{} above. Continued pages get a top margin from @page (not :first). -->
+  <!-- Body: paper-white, flows naturally. Multi-page bodies inherit paper
+       background from body{} above. Continued pages get a top margin from
+       @page (not :first), into which the running header is rendered. -->
   <div class="page paper">
     <div class="document-content">
       {{BODY_CONTENT}}
