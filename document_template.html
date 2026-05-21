@@ -17,24 +17,37 @@
        SINE-SINE invoice without per-page HTML sectioning. */
     @page {
       size: A4 portrait;
-      /* Top 30mm and bottom 22mm give the running header/footer text
-         enough vertical breathing room AND push body content away from
-         the dark bars (Page 1 Treatment was kissing the footer, Page 2
-         body continuation was kissing the running header). */
-      margin: 30mm 0 22mm 0;
-      background-color: #0A0A0A;
+      /* 32mm top + 32mm bottom margin. The bar itself is only 22mm tall
+         (painted via gradient); the remaining 10mm is paper-color, acting
+         as visual breathing room between the bar and the body content.
+         Symmetric top/bottom — same bar height on header and footer. */
+      margin: 32mm 0 32mm 0;
+      /* Layered backgrounds: paper everywhere, with a 22mm void bar at
+         the very top and another at the very bottom. The transparent
+         portion of each gradient (22mm–32mm) reveals the underlying
+         paper background-color, creating the spacer. */
+      background-color: var(--paper, #F5F1EA);
+      background-image:
+        linear-gradient(to bottom, #0A0A0A 0 22mm, transparent 22mm),
+        linear-gradient(to top,    #0A0A0A 0 22mm, transparent 22mm);
+      background-size: 100% 32mm, 100% 32mm;
+      background-position: top, bottom;
+      background-repeat: no-repeat;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
 
-      /* Running header on pages 2+. Page 1 overrides @top-* to none. */
+      /* Running header on pages 2+. Text must sit within the 22mm void
+         bar at the TOP of the margin (margin is 32mm; bar is 0–22mm; the
+         lower 22–32mm is paper spacer). vertical-align: top + padding-top
+         centers text within the bar. Page 1 overrides @top-* to none. */
       @top-left {
         content: "{{RUNNING_HEADER_LEFT}}";
         font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
         font-weight: 900;
         font-size: 10pt;
         color: #F5F1EA;
-        padding: 0 0 0 18mm;
-        vertical-align: middle;
+        padding: 8mm 0 0 18mm;
+        vertical-align: top;
         white-space: nowrap;
       }
       @top-center {
@@ -48,15 +61,17 @@
         color: rgba(245, 241, 234, 0.72);
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        padding: 0 18mm 0 0;
-        vertical-align: middle;
+        padding: 8mm 18mm 0 0;
+        vertical-align: top;
         text-align: right;
         white-space: nowrap;
       }
 
-      /* Running footer on every page. white-space is NOT nowrap because the
-         long brand line wraps to two lines on purpose, mirroring the
-         SINE-SINE invoice's editorial wrap. */
+      /* Running footer on every page. Text sits within the 22mm void bar
+         at the BOTTOM of the margin (margin is 32mm; bar is at 10–32mm
+         from the margin's top, i.e. anchored to bottom). vertical-align:
+         bottom + padding-bottom centers text within the bar. white-space
+         stays normal so the URL+brand line can wrap if needed. */
       @bottom-left {
         content: "{{FOOTER_LEFT}}";
         font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -66,8 +81,8 @@
         color: rgba(245, 241, 234, 0.48);
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        padding: 0 4mm 0 18mm;
-        vertical-align: middle;
+        padding: 0 4mm 8mm 18mm;
+        vertical-align: bottom;
       }
       @bottom-center {
         content: "";
@@ -81,17 +96,24 @@
         color: rgba(245, 241, 234, 0.48);
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        padding: 0 18mm 0 4mm;
-        vertical-align: middle;
+        padding: 0 18mm 8mm 4mm;
+        vertical-align: bottom;
         text-align: right;
       }
     }
 
-    /* Page 1: no top margin so the dark hero band touches the page edge.
-       Bottom 22mm stays for the running footer. Top margin-boxes are
-       suppressed (page 1 has the full hero instead of a running header). */
+    /* Page 1: no top margin (hero touches the page edge). Bottom 32mm
+       matches the rest — 22mm void bar + 10mm paper spacer. Top margin-
+       boxes are suppressed (page 1 has the full hero, not a running
+       header). Override the background to ONLY apply the bottom bar
+       gradient (no top gradient — that would conflict with the hero). */
     @page :first {
-      margin: 0 0 22mm 0;
+      margin: 0 0 32mm 0;
+      background-color: var(--paper, #F5F1EA);
+      background-image: linear-gradient(to top, #0A0A0A 0 22mm, transparent 22mm);
+      background-size: 100% 32mm;
+      background-position: bottom;
+      background-repeat: no-repeat;
       @top-left   { content: none; }
       @top-center { content: none; }
       @top-right  { content: none; }
