@@ -17,7 +17,11 @@
        SINE-SINE invoice without per-page HTML sectioning. */
     @page {
       size: A4 portrait;
-      margin: 24mm 0 18mm 0;
+      /* Top 30mm and bottom 22mm give the running header/footer text
+         enough vertical breathing room AND push body content away from
+         the dark bars (Page 1 Treatment was kissing the footer, Page 2
+         body continuation was kissing the running header). */
+      margin: 30mm 0 22mm 0;
       background-color: #0A0A0A;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
@@ -84,10 +88,10 @@
     }
 
     /* Page 1: no top margin so the dark hero band touches the page edge.
-       Bottom 18mm stays for the running footer. Top margin-boxes are
+       Bottom 22mm stays for the running footer. Top margin-boxes are
        suppressed (page 1 has the full hero instead of a running header). */
     @page :first {
-      margin: 0 0 18mm 0;
+      margin: 0 0 22mm 0;
       @top-left   { content: none; }
       @top-center { content: none; }
       @top-right  { content: none; }
@@ -107,7 +111,10 @@
 
     .page {
       width: 210mm;
-      padding: 12mm 18mm 24mm 18mm;
+      /* No bottom padding — @page margin-bottom (18mm) provides the footer
+         clearance. A non-zero padding-bottom here was previously overflowing
+         to a trailing empty page with only running header/footer. */
+      padding: 12mm 18mm 0 18mm;
       box-sizing: border-box;
       position: relative;
       background-color: var(--night, #0A0A0A);
