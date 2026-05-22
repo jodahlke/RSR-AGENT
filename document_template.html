@@ -48,7 +48,11 @@
         white-space: nowrap;
       }
       @top-center {
-        content: "";
+        /* Non-breaking space — prevents Chrome from collapsing this
+           box to 0px width when content is empty. Without it,
+           @top-left and @top-right would butt against each other at
+           the page center, creating a visible anti-aliasing seam. */
+        content: "\00A0";
         background-color: #0A0A0A;
         border-bottom: 10mm solid transparent;
         background-clip: padding-box;
@@ -92,7 +96,10 @@
         vertical-align: middle;
       }
       @bottom-center {
-        content: "";
+        /* See @top-center — non-breaking space prevents box collapse
+           and the resulting hairline seam between @bottom-left and
+           @bottom-right. */
+        content: "\00A0";
         background-color: #0A0A0A;
         border-top: 10mm solid transparent;
         background-clip: padding-box;
