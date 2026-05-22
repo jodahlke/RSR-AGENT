@@ -15,105 +15,119 @@
        strip — running header (top, pages 2+) and running footer (every page).
        This gives us the full-bleed black header/footer bars from the
        SINE-SINE invoice without per-page HTML sectioning. */
+    /* ===== PAGED MEDIA =====
+       Bars are rendered via @page margin-boxes (the only reliable
+       approach in PDFShift's Chrome). Each margin-box has a void
+       background that fills only the padding-box, plus a 10mm
+       transparent border on the body-facing side. The transparent
+       border reveals the @page paper bg behind it, giving a clean
+       10mm spacer between the dark bar and the body content.
+
+       Known limitation: at the boundaries between adjacent margin-boxes
+       (@top-left / @top-center / @top-right and the bottom trio), Chrome's
+       print renderer produces a faint subpixel hairline where the void
+       backgrounds meet. We accepted this after exhausting alternatives:
+       - @page bg-image gradient → PDFShift silently ignores
+       - @page bg-image SVG data-URI → PDFShift silently ignores
+       - position:fixed bars → unpredictable positioning in print mode,
+         bars end up overlapping body content on pages 2+. */
     @page {
       size: A4 portrait;
-      /* 32mm margin on top and bottom. The void header/footer bars are
-         rendered as position:fixed HTML elements (see .bar rules below)
-         — Chrome's print engine repeats them on every page. This avoids
-         both the @page bg-image gradient/SVG approaches (which PDFShift
-         silently ignores) AND the multi-margin-box anti-aliasing seam.
-         The @page margins provide the empty space the bars sit in plus
-         the 10mm paper spacer between bar and body content. */
       margin: 32mm 0 32mm 0;
       background-color: var(--paper, #F5F1EA);
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+
+      @top-left {
+        content: "{{RUNNING_HEADER_LEFT}}";
+        background-color: #0A0A0A;
+        border-bottom: 10mm solid transparent;
+        background-clip: padding-box;
+        box-sizing: border-box;
+        font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 10pt;
+        color: #F5F1EA;
+        padding: 0 0 0 18mm;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      @top-center {
+        /* Non-breaking space prevents Chrome from collapsing this box
+           to 0px width, which would otherwise create one larger seam
+           between @top-left and @top-right at the page center. */
+        content: "\00A0";
+        background-color: #0A0A0A;
+        border-bottom: 10mm solid transparent;
+        background-clip: padding-box;
+        box-sizing: border-box;
+      }
+      @top-right {
+        content: "{{RUNNING_HEADER_RIGHT}}";
+        background-color: #0A0A0A;
+        border-bottom: 10mm solid transparent;
+        background-clip: padding-box;
+        box-sizing: border-box;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 8pt;
+        color: rgba(245, 241, 234, 0.72);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0 18mm 0 0;
+        vertical-align: middle;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      @bottom-left {
+        content: "{{FOOTER_LEFT}}";
+        background-color: #0A0A0A;
+        border-top: 10mm solid transparent;
+        background-clip: padding-box;
+        box-sizing: border-box;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 7pt;
+        line-height: 1.45;
+        color: rgba(245, 241, 234, 0.48);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0 4mm 0 18mm;
+        vertical-align: middle;
+      }
+      @bottom-center {
+        content: "\00A0";
+        background-color: #0A0A0A;
+        border-top: 10mm solid transparent;
+        background-clip: padding-box;
+        box-sizing: border-box;
+      }
+      @bottom-right {
+        content: "{{FOOTER_RIGHT}} · SEITE " counter(page) " / " counter(pages);
+        background-color: #0A0A0A;
+        border-top: 10mm solid transparent;
+        background-clip: padding-box;
+        box-sizing: border-box;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 7pt;
+        line-height: 1.45;
+        color: rgba(245, 241, 234, 0.48);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0 18mm 0 4mm;
+        vertical-align: middle;
+        text-align: right;
+      }
     }
 
     @page :first {
-      /* Page 1: no top margin so the hero touches the page edge.
-         Bottom 32mm matches Pages 2+. */
       margin: 0 0 32mm 0;
       background-color: var(--paper, #F5F1EA);
-    }
-
-    /* ===== RUNNING BARS (position:fixed) =====
-       Single continuous box per bar — no internal seams, no anti-aliasing
-       hairlines. Chrome's print engine repeats fixed elements on every
-       page at the fixed top/bottom coordinates.
-
-       In Chrome's print mode, position:fixed references the BODY AREA
-       (= page minus @page margins), NOT the full page. So `top: 0` puts
-       the bar at body-area-top (= @page margin-top of each page), which
-       is 32mm into the page on pages 2+ — way too far down.
-
-       Fix: use top: -32mm and bottom: -32mm to push the bars OUT of the
-       body area, into the @page margin region. With @page margin: 32mm,
-       this puts the bars exactly at page-top and page-bottom.
-
-       Page 1 has @page :first margin: 0 top — so its body area starts
-       at page-top. top: -32mm pushes the top bar above the page edge
-       (clipped, invisible) — which is correct, the hero replaces it. */
-    .bar {
-      position: fixed;
-      left: 0;
-      right: 0;
-      height: 22mm;
-      background-color: #0A0A0A;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 18mm;
-      box-sizing: border-box;
-      z-index: 1;
-    }
-    .bar-top    { top: -32mm; }
-    .bar-bottom { bottom: -32mm; }
-
-    /* Header bar text styling (top of pages 2+) */
-    .bar-top .bar-left {
-      font-family: var(--font-display, 'Inter Tight'), sans-serif;
-      font-weight: 900;
-      font-size: 10pt;
-      color: var(--paper, #F5F1EA);
-    }
-    .bar-top .bar-right {
-      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
-      font-weight: 500;
-      font-size: 8pt;
-      color: rgba(245, 241, 234, 0.72);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    /* Footer bar text styling (bottom of every page) */
-    .bar-bottom .bar-left,
-    .bar-bottom .bar-right {
-      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
-      font-weight: 500;
-      font-size: 7pt;
-      line-height: 1.45;
-      color: rgba(245, 241, 234, 0.48);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-    .bar-bottom .bar-right {
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    /* Page counter via counter(page)/counter(pages) on body-level
-       pseudo-elements does NOT resolve in Chrome's print mode (they
-       only resolve inside @page margin-box content). Test confirmed
-       this: counter showed "SEITE 0 / 0". Removed — the PDF viewer
-       provides page numbers anyway, and the footer reads as just
-       "REC.SLEEP.REPEAT. · WWW.RECSLEEPREPEAT.COM  |  PITCH · SONY XM6". */
-
-    /* Hero on Page 1 must stack ABOVE the fixed top bar to hide it. */
-    .page.hero {
-      position: relative;
-      z-index: 2;
+      @top-left   { content: none; }
+      @top-center { content: none; }
+      @top-right  { content: none; }
     }
 
     /* Body covers the page-content area. Its background is paper, leaving
@@ -391,20 +405,6 @@
   </style>
 </head>
 <body>
-  <!-- Running header bar: position:fixed, appears on every page at the
-       top edge. On Page 1 it is hidden behind the .page.hero (z-index). -->
-  <div class="bar bar-top">
-    <span class="bar-left">{{RUNNING_HEADER_LEFT}}</span>
-    <span class="bar-right">{{RUNNING_HEADER_RIGHT}}</span>
-  </div>
-
-  <!-- Running footer bar: position:fixed, appears on every page at the
-       bottom edge. Page counter is appended via CSS ::after. -->
-  <div class="bar bar-bottom">
-    <span class="bar-left">{{FOOTER_LEFT}}</span>
-    <span class="bar-right">{{FOOTER_RIGHT}}</span>
-  </div>
-
   <!-- Hero: compact dark band at top of page 1.
        Top row: logo (left) + slate-meta (right).
        Below: eyebrow + h1 from the AI's first <h1>. -->
