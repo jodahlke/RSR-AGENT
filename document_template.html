@@ -17,98 +17,96 @@
        SINE-SINE invoice without per-page HTML sectioning. */
     @page {
       size: A4 portrait;
+      /* 32mm margin on top and bottom. The void header/footer bars are
+         rendered as position:fixed HTML elements (see .bar rules below)
+         — Chrome's print engine repeats them on every page. This avoids
+         both the @page bg-image gradient/SVG approaches (which PDFShift
+         silently ignores) AND the multi-margin-box anti-aliasing seam.
+         The @page margins provide the empty space the bars sit in plus
+         the 10mm paper spacer between bar and body content. */
       margin: 32mm 0 32mm 0;
-      /* Single-source bar rendering: an inline SVG data-URI paints both
-         the top 22mm void bar and the bottom 22mm void bar in ONE image
-         layer. This avoids the three-box anti-aliasing seam that the
-         margin-box bg-color approach produces. The margin-boxes below
-         only hold TEXT (no own bg/border), placed on top of the bars. */
       background-color: var(--paper, #F5F1EA);
-      background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 210 297'><rect width='210' height='22' fill='%230A0A0A'/><rect y='275' width='210' height='22' fill='%230A0A0A'/></svg>");
-      background-size: 100% 100%;
-      background-position: 0 0;
-      background-repeat: no-repeat;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-
-      /* Running header on pages 2+. Margin-box is 32mm tall (full margin
-         height). The void bar is at 0–22mm (painted by @page bg-image).
-         We position text in that 22mm using padding-bottom: 10mm +
-         vertical-align middle — text centers within the 22mm bar, not
-         within the full 32mm box. */
-      @top-left {
-        content: "{{RUNNING_HEADER_LEFT}}";
-        font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
-        font-weight: 900;
-        font-size: 10pt;
-        color: #F5F1EA;
-        padding: 0 0 10mm 18mm;
-        vertical-align: middle;
-        white-space: nowrap;
-      }
-      @top-center {
-        content: "";
-      }
-      @top-right {
-        content: "{{RUNNING_HEADER_RIGHT}}";
-        font-family: 'JetBrains Mono', ui-monospace, monospace;
-        font-weight: 500;
-        font-size: 8pt;
-        color: rgba(245, 241, 234, 0.72);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        padding: 0 18mm 10mm 0;
-        vertical-align: middle;
-        text-align: right;
-        white-space: nowrap;
-      }
-
-      /* Running footer on every page. Mirror of the header: void bar is
-         at the bottom 22mm of the margin (10–32mm relative to margin's
-         top edge), reached via padding-top: 10mm + vertical-align middle. */
-      @bottom-left {
-        content: "{{FOOTER_LEFT}}";
-        font-family: 'JetBrains Mono', ui-monospace, monospace;
-        font-weight: 500;
-        font-size: 7pt;
-        line-height: 1.45;
-        color: rgba(245, 241, 234, 0.48);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        padding: 10mm 4mm 0 18mm;
-        vertical-align: middle;
-      }
-      @bottom-center {
-        content: "";
-      }
-      @bottom-right {
-        content: "{{FOOTER_RIGHT}} · SEITE " counter(page) " / " counter(pages);
-        font-family: 'JetBrains Mono', ui-monospace, monospace;
-        font-weight: 500;
-        font-size: 7pt;
-        line-height: 1.45;
-        color: rgba(245, 241, 234, 0.48);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        padding: 10mm 18mm 0 4mm;
-        vertical-align: middle;
-        text-align: right;
-      }
     }
 
-    /* Page 1: no top margin (hero touches the page edge). Only the
-       bottom bar renders on this page (no top bar — the hero replaces it).
-       Override the @page bg-image to include ONLY the bottom rect. */
     @page :first {
+      /* Page 1: no top margin so the hero touches the page edge.
+         Bottom 32mm matches Pages 2+. */
       margin: 0 0 32mm 0;
       background-color: var(--paper, #F5F1EA);
-      background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 210 297'><rect y='275' width='210' height='22' fill='%230A0A0A'/></svg>");
-      background-size: 100% 100%;
-      background-position: 0 0;
-      background-repeat: no-repeat;
-      @top-left   { content: none; }
-      @top-center { content: none; }
-      @top-right  { content: none; }
+    }
+
+    /* ===== RUNNING BARS (position:fixed) =====
+       Single continuous box per bar — no internal seams, no anti-aliasing
+       hairlines. Chrome's print engine repeats fixed elements on every
+       page at the fixed top/bottom coordinates.
+
+       On Page 1, the .page.hero (z-index 2) overlays .bar-top (z-index 1),
+       so the top bar is hidden behind the hero. The bottom bar is visible
+       on every page including Page 1. */
+    .bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 22mm;
+      background-color: #0A0A0A;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 18mm;
+      box-sizing: border-box;
+      z-index: 1;
+    }
+    .bar-top    { top: 0; }
+    .bar-bottom { bottom: 0; }
+
+    /* Header bar text styling (top of pages 2+) */
+    .bar-top .bar-left {
+      font-family: var(--font-display, 'Inter Tight'), sans-serif;
+      font-weight: 900;
+      font-size: 10pt;
+      color: var(--paper, #F5F1EA);
+    }
+    .bar-top .bar-right {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 8pt;
+      color: rgba(245, 241, 234, 0.72);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Footer bar text styling (bottom of every page) */
+    .bar-bottom .bar-left,
+    .bar-bottom .bar-right {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 7pt;
+      line-height: 1.45;
+      color: rgba(245, 241, 234, 0.48);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .bar-bottom .bar-right {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Page counter appended to footer-right. counter(page) and
+       counter(pages) are CSS Paged Media values; they may or may not
+       resolve in body-level pseudo-elements depending on the renderer.
+       Worst case: this ::after produces an empty string and the footer
+       just reads "PITCH · SONY XM6" without the page number. */
+    .bar-bottom .bar-right::after {
+      content: " · SEITE " counter(page) " / " counter(pages);
+    }
+
+    /* Hero on Page 1 must stack ABOVE the fixed top bar to hide it. */
+    .page.hero {
+      position: relative;
+      z-index: 2;
     }
 
     /* Body covers the page-content area. Its background is paper, leaving
@@ -386,6 +384,20 @@
   </style>
 </head>
 <body>
+  <!-- Running header bar: position:fixed, appears on every page at the
+       top edge. On Page 1 it is hidden behind the .page.hero (z-index). -->
+  <div class="bar bar-top">
+    <span class="bar-left">{{RUNNING_HEADER_LEFT}}</span>
+    <span class="bar-right">{{RUNNING_HEADER_RIGHT}}</span>
+  </div>
+
+  <!-- Running footer bar: position:fixed, appears on every page at the
+       bottom edge. Page counter is appended via CSS ::after. -->
+  <div class="bar bar-bottom">
+    <span class="bar-left">{{FOOTER_LEFT}}</span>
+    <span class="bar-right">{{FOOTER_RIGHT}}</span>
+  </div>
+
   <!-- Hero: compact dark band at top of page 1.
        Top row: logo (left) + slate-meta (right).
        Below: eyebrow + h1 from the AI's first <h1>. -->
