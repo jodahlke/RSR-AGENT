@@ -42,9 +42,18 @@
        hairlines. Chrome's print engine repeats fixed elements on every
        page at the fixed top/bottom coordinates.
 
-       On Page 1, the .page.hero (z-index 2) overlays .bar-top (z-index 1),
-       so the top bar is hidden behind the hero. The bottom bar is visible
-       on every page including Page 1. */
+       In Chrome's print mode, position:fixed references the BODY AREA
+       (= page minus @page margins), NOT the full page. So `top: 0` puts
+       the bar at body-area-top (= @page margin-top of each page), which
+       is 32mm into the page on pages 2+ — way too far down.
+
+       Fix: use top: -32mm and bottom: -32mm to push the bars OUT of the
+       body area, into the @page margin region. With @page margin: 32mm,
+       this puts the bars exactly at page-top and page-bottom.
+
+       Page 1 has @page :first margin: 0 top — so its body area starts
+       at page-top. top: -32mm pushes the top bar above the page edge
+       (clipped, invisible) — which is correct, the hero replaces it. */
     .bar {
       position: fixed;
       left: 0;
@@ -58,8 +67,8 @@
       box-sizing: border-box;
       z-index: 1;
     }
-    .bar-top    { top: 0; }
-    .bar-bottom { bottom: 0; }
+    .bar-top    { top: -32mm; }
+    .bar-bottom { bottom: -32mm; }
 
     /* Header bar text styling (top of pages 2+) */
     .bar-top .bar-left {
@@ -94,14 +103,12 @@
       white-space: nowrap;
     }
 
-    /* Page counter appended to footer-right. counter(page) and
-       counter(pages) are CSS Paged Media values; they may or may not
-       resolve in body-level pseudo-elements depending on the renderer.
-       Worst case: this ::after produces an empty string and the footer
-       just reads "PITCH · SONY XM6" without the page number. */
-    .bar-bottom .bar-right::after {
-      content: " · SEITE " counter(page) " / " counter(pages);
-    }
+    /* Page counter via counter(page)/counter(pages) on body-level
+       pseudo-elements does NOT resolve in Chrome's print mode (they
+       only resolve inside @page margin-box content). Test confirmed
+       this: counter showed "SEITE 0 / 0". Removed — the PDF viewer
+       provides page numbers anyway, and the footer reads as just
+       "REC.SLEEP.REPEAT. · WWW.RECSLEEPREPEAT.COM  |  PITCH · SONY XM6". */
 
     /* Hero on Page 1 must stack ABOVE the fixed top bar to hide it. */
     .page.hero {
