@@ -17,74 +17,57 @@
        SINE-SINE invoice without per-page HTML sectioning. */
     @page {
       size: A4 portrait;
-      /* 32mm margins on top and bottom. Each margin-box has a void
-         background that fills only the padding-box (22mm), plus a 10mm
-         transparent border on the body-facing side. The transparent
-         border reveals the @page paper background underneath, giving a
-         clean spacer between the dark bar and the body content WITHOUT
-         a visible seam (a paper-colored border would anti-alias against
-         the @page paper bg and leave a thin line at the boundary). */
       margin: 32mm 0 32mm 0;
+      /* Single-source bar rendering: an inline SVG data-URI paints both
+         the top 22mm void bar and the bottom 22mm void bar in ONE image
+         layer. This avoids the three-box anti-aliasing seam that the
+         margin-box bg-color approach produces. The margin-boxes below
+         only hold TEXT (no own bg/border), placed on top of the bars. */
       background-color: var(--paper, #F5F1EA);
+      background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 210 297'><rect width='210' height='22' fill='%230A0A0A'/><rect y='275' width='210' height='22' fill='%230A0A0A'/></svg>");
+      background-size: 100% 100%;
+      background-position: 0 0;
+      background-repeat: no-repeat;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
 
-      /* Running header on pages 2+. Each top margin-box gets bg-color
-         void + 10mm paper border-bottom. The box is 32mm tall; 22mm of
-         it is dark (the bar with the header text), the lower 10mm is
-         paper-colored (the spacer). Page 1 overrides @top-* to none. */
+      /* Running header on pages 2+. Margin-box is 32mm tall (full margin
+         height). The void bar is at 0–22mm (painted by @page bg-image).
+         We position text in that 22mm using padding-bottom: 10mm +
+         vertical-align middle — text centers within the 22mm bar, not
+         within the full 32mm box. */
       @top-left {
         content: "{{RUNNING_HEADER_LEFT}}";
-        background-color: #0A0A0A;
-        border-bottom: 10mm solid transparent;
-        background-clip: padding-box;
-        box-sizing: border-box;
         font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
         font-weight: 900;
         font-size: 10pt;
         color: #F5F1EA;
-        padding: 0 0 0 18mm;
+        padding: 0 0 10mm 18mm;
         vertical-align: middle;
         white-space: nowrap;
       }
       @top-center {
-        /* Non-breaking space — prevents Chrome from collapsing this
-           box to 0px width when content is empty. Without it,
-           @top-left and @top-right would butt against each other at
-           the page center, creating a visible anti-aliasing seam. */
-        content: "\00A0";
-        background-color: #0A0A0A;
-        border-bottom: 10mm solid transparent;
-        background-clip: padding-box;
-        box-sizing: border-box;
+        content: "";
       }
       @top-right {
         content: "{{RUNNING_HEADER_RIGHT}}";
-        background-color: #0A0A0A;
-        border-bottom: 10mm solid transparent;
-        background-clip: padding-box;
-        box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
         font-size: 8pt;
         color: rgba(245, 241, 234, 0.72);
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        padding: 0 18mm 0 0;
+        padding: 0 18mm 10mm 0;
         vertical-align: middle;
         text-align: right;
         white-space: nowrap;
       }
 
-      /* Running footer on every page. Each bottom margin-box gets bg-color
-         void + 10mm paper border-TOP. The 10mm spacer sits above the dark
-         bar (between body content and the footer bar). */
+      /* Running footer on every page. Mirror of the header: void bar is
+         at the bottom 22mm of the margin (10–32mm relative to margin's
+         top edge), reached via padding-top: 10mm + vertical-align middle. */
       @bottom-left {
         content: "{{FOOTER_LEFT}}";
-        background-color: #0A0A0A;
-        border-top: 10mm solid transparent;
-        background-clip: padding-box;
-        box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
         font-size: 7pt;
@@ -92,25 +75,14 @@
         color: rgba(245, 241, 234, 0.48);
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        padding: 0 4mm 0 18mm;
+        padding: 10mm 4mm 0 18mm;
         vertical-align: middle;
       }
       @bottom-center {
-        /* See @top-center — non-breaking space prevents box collapse
-           and the resulting hairline seam between @bottom-left and
-           @bottom-right. */
-        content: "\00A0";
-        background-color: #0A0A0A;
-        border-top: 10mm solid transparent;
-        background-clip: padding-box;
-        box-sizing: border-box;
+        content: "";
       }
       @bottom-right {
         content: "{{FOOTER_RIGHT}} · SEITE " counter(page) " / " counter(pages);
-        background-color: #0A0A0A;
-        border-top: 10mm solid transparent;
-        background-clip: padding-box;
-        box-sizing: border-box;
         font-family: 'JetBrains Mono', ui-monospace, monospace;
         font-weight: 500;
         font-size: 7pt;
@@ -118,19 +90,22 @@
         color: rgba(245, 241, 234, 0.48);
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        padding: 0 18mm 0 4mm;
+        padding: 10mm 18mm 0 4mm;
         vertical-align: middle;
         text-align: right;
       }
     }
 
-    /* Page 1: no top margin (hero touches the page edge). Bottom 32mm
-       matches the rest. Top margin-boxes are suppressed (page 1 has the
-       full hero, not a running header). The @bottom-* margin-boxes
-       inherit from @page, so the footer bar with paper spacer renders. */
+    /* Page 1: no top margin (hero touches the page edge). Only the
+       bottom bar renders on this page (no top bar — the hero replaces it).
+       Override the @page bg-image to include ONLY the bottom rect. */
     @page :first {
       margin: 0 0 32mm 0;
       background-color: var(--paper, #F5F1EA);
+      background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 210 297'><rect y='275' width='210' height='22' fill='%230A0A0A'/></svg>");
+      background-size: 100% 100%;
+      background-position: 0 0;
+      background-repeat: no-repeat;
       @top-left   { content: none; }
       @top-center { content: none; }
       @top-right  { content: none; }
