@@ -34,12 +34,21 @@
 
       @top-center {
         content: element(header-bar);
-        /* Make sure the running element gets the full margin width. */
+        /* Full-width box, and stick the bar to the OUTER edge (page top)
+           so the bar is flush with the page boundary. The 10mm spacer
+           between bar and body content sits on the INNER side only. */
         width: 100%;
+        vertical-align: top;
+        padding: 0;
+        margin: 0;
       }
       @bottom-center {
         content: element(footer-bar);
+        /* Mirror: bar stuck to page bottom edge, spacer above the bar. */
         width: 100%;
+        vertical-align: bottom;
+        padding: 0;
+        margin: 0;
       }
     }
 
