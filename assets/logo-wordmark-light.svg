@@ -1,4 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 96" width="640" height="96">
-  
-  <text x="0" y="74" class="wm wm-fg">rec<tspan class="wm-dot">.</tspan>sleep<tspan class="wm-dot">.</tspan>repeat<tspan class="wm-dot">.</tspan></text>
+  <text x="0" y="74"
+        font-family="Inter Tight, sans-serif"
+        font-weight="800"
+        font-size="60"
+        letter-spacing="-3"
+        fill="#F5F1EA">rec<tspan fill="#E10600">.</tspan>sleep<tspan fill="#E10600">.</tspan>repeat<tspan fill="#E10600">.</tspan></text>
 </svg>
