@@ -267,14 +267,17 @@
       color: var(--rec, #E10600);
     }
 
-    /* When the AI wraps part of an H2 in <em>, that part renders italic
-       Regular (Inter Regular) for the SINE-SINE mixed-weight feel:
-       e.g. "BANK<em>verbindung</em>" → BANK + italic verbindung. */
+    /* Mixed-weight H2 signature: the last word of every multi-word H2 is
+       auto-wrapped in <em> by the Assemble HTML node, then rendered here
+       as italic Inter Regular in LOWERCASE. The contrast between the
+       Inter Tight Black ALL-CAPS bulk and the lowercase italic tail is
+       the rec.sleep.repeat. editorial signature (e.g. "CREW & setup.",
+       "TIMELINE & scope.", "NEXT steps."). */
     .document-content h2 em {
       font-family: var(--font-body, 'Inter', sans-serif);
       font-style: italic;
       font-weight: 400;
-      text-transform: none;
+      text-transform: lowercase;
       letter-spacing: 0;
       color: var(--void);
     }
