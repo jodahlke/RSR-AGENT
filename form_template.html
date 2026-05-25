@@ -354,7 +354,12 @@
       font-weight: 400;
     }
 
-    /* ===== TOTALS — right-aligned ladder with red ZU-ZAHLEN box ===== */
+    /* ===== TOTALS — right-aligned ladder with red ZU-ZAHLEN box =====
+       Non-total rows: right-aligned, label and value separated by a
+       gap, all confined to the right half so they line up under the
+       ZU-ZAHLEN box.
+       Total row: 50%-wide red box on the right side, label and value
+       split via space-between INSIDE the box. */
     .totals {
       width: 100%;
       margin-top: 4mm;
@@ -364,27 +369,28 @@
     .totals .row {
       display: flex;
       justify-content: space-between;
+      align-items: baseline;
       padding: 2.5mm 0;
       font-family: var(--font-body, 'Inter'), sans-serif;
       font-size: 11pt;
+      width: 50%;
+      margin-left: auto;
     }
     .totals .row > span:first-child {
       color: var(--void, #0A0A0A);
       font-weight: 700;
-      margin-left: 50%;
+      text-align: left;
     }
     .totals .row > span:last-child {
       color: var(--void, #0A0A0A);
       font-weight: 700;
       text-align: right;
-      min-width: 30mm;
+      white-space: nowrap;
     }
     .totals .row.total {
       background-color: var(--rec, #E10600);
-      color: var(--paper-pure, #FFFFFF);
-      padding: 5mm 5mm;
+      padding: 5mm 6mm;
       margin-top: 3mm;
-      margin-left: 50%;
     }
     .totals .row.total > span {
       color: var(--paper-pure, #FFFFFF) !important;
@@ -393,7 +399,6 @@
       font-size: 13pt;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin-left: 0 !important;
     }
     .totals .row.total > span:last-child {
       font-size: 14pt;
