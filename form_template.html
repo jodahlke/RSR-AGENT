@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Document</title>
+  <!-- The n8n Assemble HTML node inlines colors_and_type.css here. -->
+  <style>
+    {{CSS_CONTENT}}
+
+    /* =========================================================================
+       FORM TEMPLATE — Anzahlungsrechnung / Rechnung / Angebot / Auftrag
+       Reference: the SINE-SINE Anzahlungsrechnung supplied by Jonas.
+       Shares the running-bar brand layer with document_template.html.
+       ========================================================================= */
+
+    @page {
+      size: A4 portrait;
+      margin: 32mm 0 32mm 0;
+      background-color: var(--paper, #F5F1EA);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+
+      @top-center {
+        content: element(header-bar);
+        width: 100%;
+        vertical-align: top;
+        padding: 0;
+        margin: 0;
+      }
+      @bottom-center {
+        content: element(footer-bar);
+        width: 100%;
+        vertical-align: bottom;
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    @page :first {
+      margin: 0 0 32mm 0;
+      background-color: var(--paper, #F5F1EA);
+      @top-center { content: none; }
+    }
+
+    /* ===== RUNNING BARS — same brand layer as document_template ===== */
+    .bar-top    { position: running(header-bar); }
+    .bar-bottom { position: running(footer-bar); }
+    .bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 22mm;
+      background-color: #0A0A0A;
+      padding: 0 18mm;
+      box-sizing: border-box;
+    }
+    .bar-top .bar-left {
+      font-family: var(--font-display, 'Inter Tight'), sans-serif;
+      font-weight: 900;
+      font-size: 10pt;
+      color: var(--paper, #F5F1EA);
+      white-space: nowrap;
+    }
+    .bar-top .bar-right {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 8pt;
+      color: rgba(245, 241, 234, 0.72);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .bar-bottom .bar-left,
+    .bar-bottom .bar-right {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 7pt;
+      line-height: 1.45;
+      color: rgba(245, 241, 234, 0.48);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .bar-bottom .bar-right {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .bar-bottom .bar-right::after {
+      content: " · SEITE " counter(page) " / " counter(pages);
+    }
+
+    /* ===== PAGE + BODY base ===== */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--paper, #F5F1EA);
+      color: var(--void, #0A0A0A);
+      font-family: var(--font-body, 'Inter', sans-serif);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      width: 210mm;
+      padding: 14mm 18mm 0 18mm;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* ===== HERO — heavy form hero on page 1 =====
+       Full-bleed void band from page top down to ~130mm.
+       Order top→bottom: hero-top row (logo + slate-meta), sub-line,
+       big H1, 4-column meta box. */
+    .page.form-hero {
+      background-color: var(--night, #0A0A0A);
+      color: var(--fg-1, #F5F1EA);
+      padding: 14mm 18mm 12mm 18mm;
+      min-height: 130mm;
+    }
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12mm;
+    }
+    .header-logo {
+      width: 220px;
+      flex-shrink: 0;
+    }
+    .header-logo svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Slate-meta in form hero: '● REC · ANZAHLUNG · 18.05.2026' */
+    .slate-meta {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--fg-3, rgba(245, 241, 234, 0.48));
+      text-align: right;
+      white-space: nowrap;
+    }
+    .slate-meta .rec-dot {
+      color: var(--rec, #E10600);
+      font-size: 11pt;
+      line-height: 1;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    /* Optional pre-title eyebrow inside the hero, e.g. "DÜSSELDORF · FILMMAKER COLLECTIVE" */
+    .page.form-hero .eyebrow {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 400;
+      font-size: 8pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--fg-3, rgba(245, 241, 234, 0.48));
+      margin: 0 0 6mm 0;
+    }
+
+    /* Hero H1 — the big invoice/offer title, ALL CAPS, REC-red period. */
+    .page.form-hero h1 {
+      font-family: var(--font-display, 'Inter Tight'), sans-serif;
+      font-weight: 900;
+      font-size: 38pt;
+      line-height: 1;
+      letter-spacing: var(--tracking-tight, -0.02em);
+      text-transform: uppercase;
+      word-spacing: 0.18em;
+      margin: 0 0 10mm 0;
+      color: var(--paper, #F5F1EA);
+    }
+    .page.form-hero h1::after {
+      content: ".";
+      color: var(--rec, #E10600);
+    }
+
+    /* 4-column meta box at the bottom of the hero. */
+    .hero-meta-box {
+      border-top: 1px solid rgba(245, 241, 234, 0.18);
+      padding-top: 6mm;
+      display: flex;
+      gap: 8mm;
+    }
+    .hero-meta-field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2mm;
+    }
+    .hero-meta-field .label {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 7pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--fg-3, rgba(245, 241, 234, 0.48));
+    }
+    .hero-meta-field .value {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 11pt;
+      letter-spacing: 0.05em;
+      color: var(--paper, #F5F1EA);
+    }
+
+    /* ===== PAPER BODY ===== */
+    .page.form-body {
+      background-color: var(--paper, #F5F1EA);
+      color: var(--void, #0A0A0A);
+      padding: 14mm 18mm 0 18mm;
+      counter-reset: section;
+    }
+
+    /* ===== PARTIES — Empfänger / Steller in 2 columns ===== */
+    .parties {
+      display: flex;
+      gap: 14mm;
+      margin-bottom: 12mm;
+    }
+    .party {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2mm;
+    }
+    .party .label {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 8pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray-400, #999);
+      margin-bottom: 1mm;
+    }
+    .party strong {
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-weight: 700;
+      font-size: 11pt;
+      color: var(--void, #0A0A0A);
+      display: block;
+    }
+    .party p {
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-weight: 400;
+      font-size: 10pt;
+      line-height: 1.5;
+      color: var(--gray-600, #444);
+      margin: 0;
+    }
+
+    /* ===== SECTION COUNTERS (eyebrow REC-red) =====
+       In the form body, <h2> is the small section eyebrow (01 — ANZAHLUNG)
+       and <h3 class="form-title"> is the big editorial title underneath. */
+    .form-body h2 {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 9pt;
+      color: var(--rec, #E10600);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin: 14mm 0 4mm 0;
+      counter-increment: section;
+    }
+    .form-body h2::before {
+      content: counter(section, decimal-leading-zero) " \2014 ";
+      color: var(--rec, #E10600);
+      letter-spacing: 0.22em;
+    }
+
+    /* Form title — the editorial mixed-weight headline like
+       "50 % vor DREHTAG.", "BANKverbindung.", "RECHTLICHES in Kürze." */
+    .form-body .form-title {
+      font-family: var(--font-display, 'Inter Tight'), sans-serif;
+      font-weight: 900;
+      font-size: 22pt;
+      line-height: 1.05;
+      letter-spacing: var(--tracking-tight, -0.02em);
+      text-transform: uppercase;
+      word-spacing: 0.18em;
+      margin: 0 0 5mm 0;
+      color: var(--void, #0A0A0A);
+    }
+    .form-body .form-title::after {
+      content: ".";
+      color: var(--rec, #E10600);
+    }
+    .form-body .form-title em {
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      text-transform: lowercase;
+      letter-spacing: 0;
+      color: var(--void, #0A0A0A);
+    }
+
+    /* Body paragraphs */
+    .form-body p {
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-weight: 400;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: var(--gray-600, #444);
+      margin: 0 0 4mm 0;
+    }
+    .form-body p strong {
+      color: var(--void, #0A0A0A);
+      font-weight: 700;
+    }
+
+    /* ===== POSITION TABLE ===== */
+    .position-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 4mm;
+    }
+    .position-table thead th {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 8pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray-400, #999);
+      text-align: left;
+      padding: 2mm 0 3mm 0;
+      border-bottom: 1px solid var(--gray-200, #ddd);
+    }
+    .position-table thead th:last-child {
+      text-align: right;
+    }
+    .position-table tbody td {
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: var(--void, #0A0A0A);
+      padding: 3mm 0 1mm 0;
+      vertical-align: top;
+    }
+    .position-table tbody td:last-child {
+      text-align: right;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+    .position-table tbody tr.sub td {
+      font-size: 10pt;
+      color: var(--gray-600, #444);
+      font-weight: 400;
+      padding: 0 0 3mm 0;
+    }
+    .position-table tbody tr.sub td:last-child {
+      font-weight: 400;
+    }
+
+    /* ===== TOTALS — right-aligned ladder with red ZU-ZAHLEN box ===== */
+    .totals {
+      width: 100%;
+      margin-top: 4mm;
+      margin-bottom: 8mm;
+      border-top: 1px solid var(--gray-200, #ddd);
+    }
+    .totals .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 2.5mm 0;
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-size: 11pt;
+    }
+    .totals .row > span:first-child {
+      color: var(--void, #0A0A0A);
+      font-weight: 700;
+      margin-left: 50%;
+    }
+    .totals .row > span:last-child {
+      color: var(--void, #0A0A0A);
+      font-weight: 700;
+      text-align: right;
+      min-width: 30mm;
+    }
+    .totals .row.total {
+      background-color: var(--rec, #E10600);
+      color: var(--paper-pure, #FFFFFF);
+      padding: 5mm 5mm;
+      margin-top: 3mm;
+      margin-left: 50%;
+    }
+    .totals .row.total > span {
+      color: var(--paper-pure, #FFFFFF) !important;
+      font-family: var(--font-display, 'Inter Tight'), sans-serif;
+      font-weight: 900;
+      font-size: 13pt;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-left: 0 !important;
+    }
+    .totals .row.total > span:last-child {
+      font-size: 14pt;
+    }
+
+    /* ===== FIELD GRID — used for bank, contact, address blocks ===== */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm 14mm;
+      margin-bottom: 6mm;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5mm;
+    }
+    .field .label {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 8pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gray-400, #999);
+    }
+    .field .value {
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-weight: 700;
+      font-size: 11pt;
+      color: var(--void, #0A0A0A);
+    }
+    .field .value.mono {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== HINWEISE LIST — REC-red disc bullets with stronger lead labels ===== */
+    .form-body ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0 0 6mm 0;
+    }
+    .form-body ul li {
+      position: relative;
+      padding-left: 6mm;
+      margin-bottom: 3mm;
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: var(--gray-600, #444);
+    }
+    .form-body ul li::before {
+      content: "\25CF";
+      color: var(--rec, #E10600);
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 8pt;
+      line-height: 1.9;
+    }
+    .form-body ul li strong {
+      color: var(--void, #0A0A0A);
+      font-weight: 700;
+    }
+
+    /* ===== CALLOUT BOX — bordered, REC-red eyebrow + heading + paragraph ===== */
+    .callout {
+      border: 1px solid var(--gray-200, #ddd);
+      padding: 6mm 6mm 5mm 6mm;
+      margin: 8mm 0 6mm 0;
+    }
+    .callout .label {
+      font-family: var(--font-mono, 'JetBrains Mono'), monospace;
+      font-weight: 500;
+      font-size: 8pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rec, #E10600);
+      display: block;
+      margin-bottom: 3mm;
+    }
+    .callout h4 {
+      font-family: var(--font-display, 'Inter Tight'), sans-serif;
+      font-weight: 900;
+      font-size: 13pt;
+      letter-spacing: var(--tracking-tight, -0.02em);
+      text-transform: uppercase;
+      word-spacing: 0.18em;
+      margin: 0 0 3mm 0;
+      color: var(--void, #0A0A0A);
+    }
+    .callout h4::after {
+      content: ".";
+      color: var(--rec, #E10600);
+    }
+    .callout p {
+      font-family: var(--font-body, 'Inter'), sans-serif;
+      font-size: 10pt;
+      line-height: 1.55;
+      color: var(--gray-600, #444);
+      margin: 0;
+    }
+
+    /* ===== PAGE-BREAK RULES ===== */
+    .form-body h2,
+    .form-body .form-title,
+    .form-body h4 {
+      break-after: avoid-page;
+      page-break-after: avoid;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .form-body p {
+      orphans: 3;
+      widows: 3;
+    }
+    .form-body .position-table,
+    .form-body .totals,
+    .form-body .callout,
+    .form-body .field-grid,
+    .form-body .parties {
+      break-inside: avoid-page;
+      page-break-inside: avoid;
+    }
+  </style>
+</head>
+<body>
+  <!-- Running bars (Page 1 footer, Pages 2+ header + footer). -->
+  <div class="bar bar-top">
+    <span class="bar-left">{{RUNNING_HEADER_LEFT}}</span>
+    <span class="bar-right">{{RUNNING_HEADER_RIGHT}}</span>
+  </div>
+  <div class="bar bar-bottom">
+    <span class="bar-left">{{FOOTER_LEFT}}</span>
+    <span class="bar-right">{{FOOTER_RIGHT}}</span>
+  </div>
+
+  <!-- Hero — full-bleed void band on page 1. AI generates the eyebrow,
+       big H1, and 4-column meta-box inside {{HERO_CONTENT}}. -->
+  <div class="page form-hero">
+    <div class="hero-top">
+      <div class="header-logo">
+        {{LOGO_SVG_CONTENT}}
+      </div>
+      <div class="slate-meta">
+        {{SLATE_META}}
+      </div>
+    </div>
+    {{HERO_CONTENT}}
+  </div>
+
+  <!-- Body — paper. AI generates parties block + form sections. -->
+  <div class="page form-body">
+    {{BODY_CONTENT}}
+  </div>
+</body>
+</html>
