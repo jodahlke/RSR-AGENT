@@ -355,13 +355,13 @@
     }
 
     /* ===== TOTALS — right-aligned ladder with red ZU-ZAHLEN box =====
-       Non-total rows: right-aligned, label and value separated by a
-       gap, all confined to the right half so they line up under the
-       ZU-ZAHLEN box.
-       Total row: 50%-wide red box on the right side, label and value
-       split via space-between INSIDE the box. */
+       The entire .totals container is constrained to 50% width and
+       pushed to the right via margin-left: auto. All rows inside
+       live in that 50% box. The red ZU-ZAHLEN row inherits the same
+       width and just gets the red bg + bigger Inter Tight Black. */
     .totals {
-      width: 100%;
+      width: 50%;
+      margin-left: auto;
       margin-top: 4mm;
       margin-bottom: 8mm;
       border-top: 1px solid var(--gray-200, #ddd);
@@ -373,8 +373,6 @@
       padding: 2.5mm 0;
       font-family: var(--font-body, 'Inter'), sans-serif;
       font-size: 11pt;
-      width: 50%;
-      margin-left: auto;
     }
     .totals .row > span:first-child {
       color: var(--void, #0A0A0A);
